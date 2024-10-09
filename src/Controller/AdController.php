@@ -28,47 +28,7 @@ class AdController extends AbstractController
             'ads' => $ads
         ]);
     }
-
-    // #[Route('/ads/{slug}', name:"ads_show")]
-    // public function show(string $slug, AdRepository $repo): Response
-    // {
-    //     // $ad = $repo->findOneBy(['slug'=> $slug]);
-    //     $ad = $repo->findOneBySlug($slug);
-    //     return $this->render("ad/show.html.twig",[
-    //         'ad' => $ad
-    //     ]);
-    // }
-
-    // #[Route('/ads/{id}', name:"ads_show")]
-    // public function show(string $id, AdRepository $repo): Response
-    // {
-    //     // $ad = $repo->findOneBy(['slug'=> $slug]);
-    //     $ad = $repo->find($id);
-    //     return $this->render("ad/show.html.twig",[
-    //         'ad' => $ad
-    //     ]);
-    // }
     
-    // #[Route('/ads/{id}', name:"ads_show")]
-    // public function show(Ad $ad): Response
-    // {
-        
-    //     return $this->render("ad/show.html.twig",[
-    //         'ad' => $ad
-    //     ]);
-    // }
-
-    // #[Route('/ads/{slug}', name:"ads_show")]
-    // public function show(
-    //     #[MapEntity(mapping: ['slug' => 'slug'])]
-    //     Ad $ad): Response
-    // {
-        
-    //     return $this->render("ad/show.html.twig",[
-    //         'ad' => $ad
-    //     ]);
-    // }
-
     /**
      * Permet d'afficher une annonce via son slug en paramètre
      * pour faire fonctionner cette methode, je dois aller dans config/packages/doctrine.yaml ligne 26 mettre true à auto_mapping

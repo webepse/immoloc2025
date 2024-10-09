@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Ad;
 use Faker\Factory;
+use App\Entity\Image;
 use Cocur\Slugify\Slugify;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -21,7 +22,7 @@ class AppFixtures extends Fixture
             $ad = new Ad();
             $title = $faker->sentence();
             // $slug = $slugify->slugify($title);
-            $coverImage = "https://picsum.photos/seed/picsum/1000/350";
+            $coverImage = "https://picsum.photos/id/".$i."/1000";
             $introduction = $faker->paragraph(2);
             $content = "<p>".join('</p><p>',$faker->paragraphs(5))."</p>";
 
@@ -33,6 +34,16 @@ class AppFixtures extends Fixture
                 ->setRooms(rand(1,5));
             
             $manager->persist($ad);
+
+            // gestion de l'image de l'annonce
+            for($j = 1; $j <= rand(2,5); $j++)
+            {
+                $image = new Image();
+                $image->setUrl("https://picsum.photos/id/".$j."/900")
+                    ->setCaption($faker->sentence())
+                    ->setAd($ad);
+                $manager->persist($image);
+            }
         }
         $manager->flush();
     }

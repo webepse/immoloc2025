@@ -1,10 +1,61 @@
-{% extends "base.html.twig" %}
-
-{% block title %}{% endblock %}
-
+{% extends 'base.html.twig' %}
+{% block title %}Annonce: {{ad.title}} {% endblock %}
 {% block body %}
-    <div class="container">
-        <h1>Annonce: {{ad.title}}</h1>
+    <div class="annonce-title" style="background-image: url({{ad.coverImage}});">
+        <div class="container">
+            <h1>{{ad.title}}</h1>
+            <p>{{ad.introduction}}</p>
+            <p class="h2"><strong>{{ad.rooms}} chambres</strong> pour <strong>{{ad.price}}</strong>€ par nuit</p>
+            <a href="#" class="btn btn-primary">Réserver</a>
+        </div>
     </div>
-
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mb-3">
+                {{ad.content | raw }}
+                <div class="bd-example">
+                    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
+                        <div class="carousel-indicators">
+                         {% for image in ad.images %}
+                            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{loop.index0}}" {% if loop.first %} class="active" aria-current="true" {% endif %} aria-label="Slide {{loop.index}}"></button>
+                        {% endfor %} 
+                        </div>
+                        <div class="carousel-inner">
+                            {% for image in ad.images %}
+                                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                    <img src="{{image.url}}" class="d-block w-100" alt="image de {{ad.title}}">
+                                    <div class="carousel-caption d-none d-md-block">
+                                         <h5>{{ad.title}}</h5>
+                                        <p>{{image.caption}}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="row">
+                    <div class="col-4">
+                        <img src="https://picsum.photos/64/64" alt="Avatar de Bruce">
+                    </div>
+                    <div class="col">
+                        <h3>Bruce Wayne</h3>
+                        <span class="badge badge-primary">3 annonces</span>
+                    </div>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo, rerum provident tempore itaque officia illo distinctio voluptatibus voluptatum vel. Doloremque.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo, rerum provident tempore itaque officia illo distinctio voluptatibus voluptatum vel. Doloremque.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo, rerum provident tempore itaque officia illo distinctio voluptatibus voluptatum vel. Doloremque.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
