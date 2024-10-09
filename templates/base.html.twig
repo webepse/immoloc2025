@@ -35,6 +35,16 @@
                 </div>
             </div>
         </nav>
+        {# {{ dump(app.flashes) }} #}
+        {% for label, messages in app.flashes %}
+            <div class="container">
+                <div class="alert alert-{{label}}">
+                    {% for message in messages %}
+                        <p>{{message | raw }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
         {% block body %}{% endblock %}
         {{ encore_entry_script_tags('app') }}
         {% block javascripts %}{% endblock %}
