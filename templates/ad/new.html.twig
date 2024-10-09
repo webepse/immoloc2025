@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %}
 {% block title %}Annonces: Création{% endblock %}
 
-{% form_theme myForm _self %}
+{# {% form_theme myForm 'bootstrap_5_layout.html.twig' %} #}
 
 {% block body %}
 <div class="container">
@@ -9,15 +9,6 @@
     {{ form_start(myForm) }}
 
         {{ form_widget(myForm) }}
-
-        {# <div>
-            {{form_row(myForm.title)}}
-        </div>
-        <div>
-            {{form_row(myForm.introduction)}}
-        </div> #}
-
-
         <button type="submit" class="btn btn-primary mt-3">Création d'une annonce</button>
 
 
@@ -28,26 +19,3 @@
 
 {% endblock %}
 
-{% block form_row %}
-
-    {# {{dump()}} #}
-    <div class="form-group my-3">
-        <div class="row">
-            <div class="col-6">
-                {{ form_label(form) }}
-            </div>
-            <div class="col-6">
-                {# {{form_widget(form, {'attr':{'class':'form-control'} })}} #}
-                {{form_widget(form)}}
-            </div>
-        </div>
-    </div>
-
-
-{% endblock %}
-
-
-{% block text_widget %}
-    {{dump()}}
-    <input type="text" name="{{full_name}}" id="{{id}}" class="form-control" placeholder="{{attr.placeholder}}">
-{% endblock %}

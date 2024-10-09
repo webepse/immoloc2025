@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class AnnonceType extends AbstractType
@@ -43,6 +44,7 @@ class AnnonceType extends AbstractType
             ->add('content', TextareaType::class, $this->getConfiguration("Description détaillée", "Donnez une description de votre bien"))
             ->add('rooms', IntegerType::class, $this->getConfiguration("Nombre de chambre","Donnez le nombre de chambres disponibles"))
             ->add('price', MoneyType::class, $this->getConfiguration("Prix par nuit","Indiquez le prix que vous voulez pour une nuit"))
+            // ->add('save', SubmitType::class, ['label' => 'Envoyer'])
         ;
     }
 
