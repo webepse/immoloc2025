@@ -3,6 +3,8 @@
 
 {# {% form_theme myForm 'bootstrap_5_layout.html.twig' %} #}
 
+{% form_theme myForm _self %}
+
 {% block body %}
 <div class="container">
     <h1>Création d'une annonce</h1>
@@ -16,6 +18,18 @@
 
 
 </div>
+
+{% endblock %}
+
+{% block _annonce_images_widget %}
+{# Définition du champ annonce_images, la variable form correspond au champ #}
+    <p>Ici, vous pouvez ajouter vos propres images</p>
+    {{form_widget(form)}}
+    <input type="hidden" id="widgets-counter" value="0">
+    <div class="form-group">
+        <button type="button" id="add-image" class="btn btn-primary">Ajouter une image</button>
+    </div>
+
 
 {% endblock %}
 

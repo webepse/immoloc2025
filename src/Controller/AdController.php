@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Ad;
+use App\Entity\Image;
 use App\Form\AnnonceType;
 use App\Repository\AdRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,6 +44,18 @@ class AdController extends AbstractController
     public function create(Request $request, EntityManagerInterface $manager): Response
     {
         $ad = new Ad();
+
+        // c'est pour voir les form images 
+        $image1 = new Image();
+        $image1->setUrl("https://picsum.photos/400/200")
+            ->setCaption('Titre 1');
+        $ad->addImage($image1);
+        
+        $image2 = new Image();
+        $image2->setUrl("https://picsum.photos/400/200")
+            ->setCaption('Titre 2');
+        $ad->addImage($image2);
+
 
         //$arrayForm = $request->request->all();
 
