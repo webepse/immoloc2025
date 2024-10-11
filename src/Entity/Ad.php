@@ -2,15 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\AdRepository;
 use Cocur\Slugify\Slugify;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
+use App\Repository\AdRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: AdRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(fields:['title'], message:"Une autre annonce posséde déjà ce titre, merci de le modifier")]
 class Ad
 {
     #[ORM\Id]
@@ -19,21 +22,26 @@ class Ad
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(min:10, max:255, minMessage:"Le titre doit faire plus de 10 caractères", maxMessage:"Le titre ne doit pas faire plus de 255 caractères")]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Le champs prix ne peut pas être vide")]
     private ?float $price = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length(min:20, max:255, minMessage:"L'introduction doit faire plus de 20 caractères", maxMessage:"L'introduction ne doit pas faire plus de 255 caractères")]
     private ?string $introduction = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length(min:100, minMessage:"La doiscription doit faire plus de 100 caractères")]
     private ?string $content = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Url()]
     private ?string $coverImage = null;
 
     #[ORM\Column]
@@ -43,6 +51,7 @@ class Ad
      * @var Collection<int, Image>
      */
     #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'ad', orphanRemoval: true)]
+    #[Assert\Valid()]
     private Collection $images;
 
     public function __construct()
