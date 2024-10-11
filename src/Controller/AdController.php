@@ -32,6 +32,13 @@ class AdController extends AbstractController
         ]);
     }
 
+    /**
+     * Permet de créer une annonce
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
     #[Route("/ads/new", name:"ads_create")]
     public function create(Request $request, EntityManagerInterface $manager): Response
     {
