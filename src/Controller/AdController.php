@@ -45,20 +45,6 @@ class AdController extends AbstractController
     {
         $ad = new Ad();
 
-        // // c'est pour voir les form images 
-        // $image1 = new Image();
-        // $image1->setUrl("https://picsum.photos/400/200")
-        //     ->setCaption('Titre 1');
-        // $ad->addImage($image1);
-        
-        // $image2 = new Image();
-        // $image2->setUrl("https://picsum.photos/400/200")
-        //     ->setCaption('Titre 2');
-        // $ad->addImage($image2);
-
-
-        //$arrayForm = $request->request->all();
-
         $form = $this->createForm(AnnonceType::class, $ad);
         $form->handleRequest($request);
 
@@ -71,8 +57,6 @@ class AdController extends AbstractController
                 $manager->persist($image);
             }
 
-
-            //dump($arrayForm['annonce']);
             $manager->persist($ad);
             $manager->flush();
 
@@ -94,6 +78,43 @@ class AdController extends AbstractController
             'myForm' => $form->createView()
         ]);
     }
+
+
+    #[Route("ads/{slug}/edit", name:"ads_edit")]
+    public function edit(Request $request, EntityManagerInterface $manager, Ad $ad): Response
+    {
+        $form = $this->createForm(AnnonceType::class, $ad);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid())
+        {
+            // gestion des image
+            foreach($ad->getImages() as $image)
+            {
+                $image->setAd($ad);
+                $manager->persist($image);
+            }
+
+            $manager->persist($ad); // pas obligatoire en cas d'update
+            $manager->flush();
+            $this->addFlash(
+                'warning',
+                "L'annonce <strong>".$ad->getTitle()."</strong> a bien été modifiée"
+            );
+
+            return $this->redirectToRoute('ads_show',[
+                'slug' => $ad->getSlug()
+            ]);
+
+        }
+
+
+        return $this->render("ad/edit.html.twig",[
+            'myForm' => $form->createView(),
+            'ad' => $ad
+        ]);
+    }
+
     
     /**
      * Permet d'afficher une annonce via son slug en paramètre

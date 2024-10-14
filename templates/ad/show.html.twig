@@ -12,8 +12,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 mb-3">
-                {{ad.content | raw }}
-                <div class="bd-example">
+                {{ad.content | nl2br | raw }}
+                <div class="bd-example mt-3">
                     <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
                         <div class="carousel-indicators">
                          {% for image in ad.images %}
