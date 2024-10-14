@@ -94,6 +94,7 @@ class AdController extends AbstractController
                 $image->setAd($ad);
                 $manager->persist($image);
             }
+            $ad->setSlug("");
 
             $manager->persist($ad); // pas obligatoire en cas d'update
             $manager->flush();
@@ -125,6 +126,7 @@ class AdController extends AbstractController
     #[Route('/ads/{slug}', name:"ads_show")]
     public function show(Ad $ad): Response
     {
+        // dump($ad);
         return $this->render("ad/show.html.twig",[
             'ad' => $ad
         ]);
