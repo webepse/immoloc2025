@@ -8,12 +8,16 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity(fields:['email'], message:"Un autre utilisateur possède déjà cette adresse e-mail, merci de la modifier")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -22,6 +26,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\Email(message: "Veuillez renseigner un email valide")]
     private ?string $email = null;
 
     /**
@@ -36,19 +41,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[Assert\EqualTo(propertyPath:"password", message:"Vous n'avez pas correctement confirmé votre mot de passe")]
+    public ?string $passwordConfirm = null;
+
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "vous devez renseigner votre prénom")]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "vous devez renseigner votre nom de famille")]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url(message: "Veuillez donner une URL valide pour votre avatar")]
     private ?string $picture = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(min:10, max:255, minMessage:"Votre introduction doit faire plus de 10 caractères", maxMessage:"Votre introduction ne doit pas faire plus de 255 caractères")]
     private ?string $introduction = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length(min:100, minMessage:"Votre description doit faire moins de 100 caractères")]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
