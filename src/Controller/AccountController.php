@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use Faker\Core\File;
 use App\Form\AccountType;
 use App\Entity\PasswordUpdate;
 use App\Form\RegistrationType;
@@ -13,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -125,7 +125,7 @@ class AccountController extends AbstractController
         $user = $this->getUser(); // récup le user connecté
         // pour passer la validation soit ça soit valdiation groups 
         $filename = $user->getPicture();
-        if(!empty($fileName))
+        if(!empty($filename))
         {
             $user->setPicture(
                 new File($this->getParameter('uploads_directory').'/'.$user->getPicture())
