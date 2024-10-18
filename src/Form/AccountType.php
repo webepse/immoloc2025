@@ -19,7 +19,6 @@ class AccountType extends ApplicationType
             ->add('firstName', TextType::class, $this->getConfiguration("Prénom","Votre prénom"))
             ->add('lastName', TextType::class, $this->getConfiguration("Nom","Votre nom de famille"))
             ->add('email', EmailType::class, $this->getConfiguration("Email","Votre adresse E-mail"))
-            ->add('picture', UrlType::class, $this->getConfiguration("Photo de profil","Url de votre avatar..."))
             ->add('introduction', TextType::class, $this->getConfiguration("Introduction","Orésenation rapide"))
             ->add('description', TextareaType::class, $this->getConfiguration("Description détaillée","Présentez vous avec un peu plus de détails"))
         ;
