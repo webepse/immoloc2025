@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdController extends AbstractController
@@ -41,9 +42,11 @@ class AdController extends AbstractController
      * @return Response
      */
     #[Route("/ads/new", name:"ads_create")]
+    #[IsGranted("ROLE_USER")]
     public function create(Request $request, EntityManagerInterface $manager): Response
     {
         $ad = new Ad();
+        $user = $this->getUser();
 
         $form = $this->createForm(AnnonceType::class, $ad);
         $form->handleRequest($request);
@@ -56,6 +59,7 @@ class AdController extends AbstractController
                 $image->setAd($ad);
                 $manager->persist($image);
             }
+            $ad->setAuthor($user);
 
             $manager->persist($ad);
             $manager->flush();
@@ -81,6 +85,7 @@ class AdController extends AbstractController
 
 
     #[Route("ads/{slug}/edit", name:"ads_edit")]
+    #[IsGranted("ROLE_USER")]
     public function edit(Request $request, EntityManagerInterface $manager, Ad $ad): Response
     {
         $form = $this->createForm(AnnonceType::class, $ad);
