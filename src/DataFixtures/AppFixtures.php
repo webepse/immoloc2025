@@ -36,9 +36,9 @@ class AppFixtures extends Fixture
             $genre = $faker->randomElement($genres);
 
             // gestion image (avatar)
-            $picture = 'https://randomuser.me/api/portraits/';
-            $pictureId = $faker->numberBetween(1,99).'.jpg';
-            $picture .= ($genre == "male" ? 'men/' : 'women/').$pictureId;
+            // $picture = 'https://randomuser.me/api/portraits/';
+            // $pictureId = $faker->numberBetween(1,99).'.jpg';
+            // $picture .= ($genre == "male" ? 'men/' : 'women/').$pictureId;
 
 
             // gestion password
@@ -50,7 +50,7 @@ class AppFixtures extends Fixture
                 ->setIntroduction($faker->sentence())
                 ->setDescription("<p>".join('</p><p>',$faker->paragraphs(3))."</p>")
                 ->setPassword($hash)
-                ->setPicture($picture);
+                ;
 
                 $manager->persist($user);
                 $users[] = $user; // ajoute l'user au tableau pour les annonces

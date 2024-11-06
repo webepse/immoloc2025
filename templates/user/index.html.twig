@@ -1,0 +1,48 @@
+
+{% extends 'base.html.twig' %}
+{% block title %}Page de {{ user.fullName }}!{% endblock %}
+{% block body %}
+    <div class="container full">
+        <div class="row align-items-center">
+            <div class="col-3 text-center">
+                {% if user.picture %}
+                    <img src="/uploads/{{user.picture}}" alt="Avatar de {{user.fullName}}" class="avatar mb-3">
+                {% else %}
+                    <img src="http://placehold.it/300x300" alt="Avatar de {{user.fullName}}" class="avatar mb-3">
+                {% endif %}
+                <br>
+                 <button type="button" class="btn btn-primary">
+                    Annonce(s) <span class="badge badge-secondary">{{user.ads | length }}</span>
+                </button>
+            </div>
+            <div class="col-9">
+                <h1>{{user.fullName}}</h1>
+                {# app.user donne accès à l'utilisateur connecté #}
+                {% if user is same as (app.user) %}
+                    <div class="mt-3">
+                        <a href="{{path('account_profile')}}" class="btn btn-primary mr-2 mb-2">Modifier mes information</a>
+                        <a href="{{path('account_password')}}" class="btn btn-primary mb-2">Modifier mon mot de passe</a>
+                        <a href="{{path('account_modifimg')}}" class="btn btn-primary mb-2">Modifier mon avatar</a>
+                        <a href="{{path('account_delimg')}}" class="btn btn-danger mb-2">Supprimer mon avatar</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {{user.description | raw | nl2br }}
+        <hr>
+        <h2>Les annonces de {{user.fullName}}</h2>
+        {% if user.ads | length > 0 %}
+            <div class="row">
+                {% for ad in user.ads %}
+                    {% include 'ad/_ad.html.twig' %} 
+                {% endfor %}
+            </div>
+        {% else %}
+           <div class="alert alert-warning">
+                <p>
+                    <strong>{{user.fullName}}</strong> n'a pas encore d'annonce sur le site
+                </p>
+           </div>         
+        {% endif %}
+    </div>
+{% endblock %}

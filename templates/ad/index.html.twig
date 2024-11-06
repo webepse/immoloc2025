@@ -7,22 +7,7 @@
  <div class="container">
     <div class="row">
         {% for ad in ads %}
-            {% set url = path('ads_show', {'slug':ad.slug}) %}
-            <div class="col-md-4">
-                <div class="card bg-light mb-3">
-                    <div class="card-header text-center">
-                        {{ad.rooms}} chambres, <strong>{{ad.price}}€ / nuit</strong>
-                    </div>
-                    <a href="{{ url }}">
-                        <img src="{{ad.coverImage}}" alt="image de l'annonce {{ad.title}}" class='starsimg'>
-                    </a>
-                    <div class="card-body">
-                        <h4 class="card-title">{{ad.title}}</h4>
-                        <p class="card-text">{{ad.introduction}}</p>
-                        <a href="{{ url }}" class="btn btn-secondary">En savoir plus</a>
-                    </div>
-                </div>   
-            </div>
+            {% include "ad/_ad.html.twig" %}
         {% endfor %}
     </div>
  </div>

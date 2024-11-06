@@ -95,6 +95,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
     }
 
+    /**
+     * Permet de retourner le nom complet de l'utilisateur
+     *
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return $this->firstName." ".$this->lastName;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

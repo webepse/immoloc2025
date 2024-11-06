@@ -3,8 +3,8 @@
 
 {% block body %}
     <div class="container">
-        <h1>Modification de l'avatar de {{app.user.email}}</h1>
-        <img src="/uploads/{{app.user.picture}}" alt="avatar de {{app.user.email}}">
+        <h1>Modification de l'avatar de {{app.user.fullName}}</h1>
+        <img src="/uploads/{{app.user.picture}}" alt="avatar de {{app.user.fullName}}">
         {{form_start(myForm)}}
             {{form_widget(myForm)}}
             <button type="submit" class="btn btn-warning">Confirmez la modification de l'avatar</button>

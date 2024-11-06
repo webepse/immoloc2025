@@ -9,16 +9,19 @@
             <a href="#" class="btn btn-primary">Réserver</a>
         </div>
     </div>
+
     <div class="container">
         <div class="row">
             <div class="col-md-8 mb-3">
-                {{ad.content | nl2br | raw }}
-                <div class="bd-example mt-3">
+                {{ad.content | raw | nl2br}}
+
+                <div class="bd-example">
                     <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
                         <div class="carousel-indicators">
                          {% for image in ad.images %}
-                            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{loop.index0}}"  {% if loop.first %} class="active" aria-current="true" {% endif %} aria-label="Slide {{loop.index}}"></button>
+                            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{loop.index0}}" {% if loop.first %} class="active" aria-current="true" {% endif %} aria-label="Slide {{loop.index}}"></button>
                         {% endfor %} 
+
                         </div>
                         <div class="carousel-inner">
                             {% for image in ad.images %}
@@ -30,6 +33,7 @@
                                     </div>
                                 </div>
                             {% endfor %}
+
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -43,17 +47,26 @@
                 </div>
             </div>
             <div class="col">
+                {% set a = ad.author %}
                 <div class="row">
-                    <div class="col-4">
-                        <img src="https://picsum.photos/64/64" alt="Avatar de Bruce">
+                    <div class="col-3">
+                        <a href="{{path('user_show', {'slug': a.slug })}}">
+                            {% if a.picture %}
+                                <img src="/uploads/{{a.picture}}" alt="Avatar de {{a.fullName}}" class="avatar avatar-medium">
+                            {% else %}
+                                <img src="http://placehold.it/300x300" alt="Avatar de {{a.fullName}}" class="avatar avatar-medium">
+                            {% endif %}
+                        </a>    
                     </div>
                     <div class="col">
-                        <h3>Bruce Wayne</h3>
-                        <span class="badge badge-primary">3 annonces</span>
+                        <a href="{{path('user_show', {'slug': a.slug })}}">
+                            <h3>{{a.fullName}}</h3>
+                        </a>
+                        <button type="button" class="btn btn-primary">
+                            Annonce(s) <span class="badge badge-secondary">{{a.ads | length }}</span>
+                        </button>
                     </div>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo, rerum provident tempore itaque officia illo distinctio voluptatibus voluptatum vel. Doloremque.</p>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo, rerum provident tempore itaque officia illo distinctio voluptatibus voluptatum vel. Doloremque.</p>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo, rerum provident tempore itaque officia illo distinctio voluptatibus voluptatum vel. Doloremque.</p>
+                   {{a.description | raw | nl2br }}
                 </div>
             </div>
         </div>
