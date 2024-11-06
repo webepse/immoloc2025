@@ -30,6 +30,18 @@ class AppFixtures extends Fixture
         $users = []; // init d'un tableau pour récup les user pour les associers aux annonces
         $genres = ['male','femelle'];
 
+        // compte admin 
+        $admin = new User();
+        $admin->setFirstName("Jordan")
+            ->setLastName("Berti")
+            ->setEmail("berti@epse.be")
+            ->setPassword($this->passwordHasher->hashPassword($admin,'password'))
+            ->setIntroduction($faker->sentence())
+            ->setDescription("<p>".join('</p><p>',$faker->paragraphs(3))."</p>")
+            ->setRoles(['ROLE_ADMIN']);
+
+        $manager->persist($admin);
+        
         for($u = 1; $u <= 10 ; $u++)
         {
             $user = new User();

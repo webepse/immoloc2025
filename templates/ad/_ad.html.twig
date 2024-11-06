@@ -11,6 +11,9 @@
             <h4 class="card-title">{{ad.title}}</h4>
             <p class="card-text">{{ad.introduction}}</p>
             <a href="{{ url }}" class="btn btn-secondary">En savoir plus</a>
+            {% if (app.user and app.user == ad.author) or is_granted('ROLE_ADMIN') %}
+                <a href="{{path('ads_edit',{'slug': ad.slug})}}" class="btn btn-warning mx-2">Modification de l'annonce</a>
+            {% endif %}
         </div>
     </div>   
 </div>

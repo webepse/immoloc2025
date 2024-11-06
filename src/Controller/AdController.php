@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 class AdController extends AbstractController
 {
@@ -85,7 +86,12 @@ class AdController extends AbstractController
 
 
     #[Route("ads/{slug}/edit", name:"ads_edit")]
-    #[IsGranted("ROLE_USER")]
+    #[IsGranted(
+        attribute: new Expression('(user === subject and is_granted("ROLE_USER")) or is_granted("ROLE_ADMIN")'),
+        subject: new Expression('args["ad"].getAuthor()'),
+        message: "Cette annonce ne vous appartient pas, vous ne pouvez pas la modifier"
+
+    )]
     public function edit(Request $request, EntityManagerInterface $manager, Ad $ad): Response
     {
         $form = $this->createForm(AnnonceType::class, $ad);
@@ -121,6 +127,31 @@ class AdController extends AbstractController
         ]);
     }
 
+      /**
+     * Permet de supprimer une annonce
+     *
+     * @param Ad $ad
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
+    #[IsGranted(
+        attribute: new Expression('(user === subject and is_granted("ROLE_USER")) or is_granted("ROLE_ADMIN")'),
+        subject: new Expression('args["ad"].getAuthor()'),
+        message: "Cette annonce ne vous appartient pas, vous ne pouvez pas la supprimer"
+
+    )]
+    #[Route("/ads/{slug}/delete", name: "ads_delete")]
+    public function delete(Ad $ad, EntityManagerInterface $manager): Response
+    {
+        $this->addFlash(
+            'success',
+            "L'annonce <strong>".$ad->getTitle()."</strong> a bien été supprimée"
+        );
+        $manager->remove($ad);
+        $manager->flush();
+        return $this->redirectToRoute('ads_index');
+    }
+
     
     /**
      * Permet d'afficher une annonce via son slug en paramètre
@@ -136,4 +167,6 @@ class AdController extends AbstractController
             'ad' => $ad
         ]);
     }
+
+  
 }
