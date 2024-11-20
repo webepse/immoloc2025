@@ -117,7 +117,7 @@ class AppFixtures extends Fixture
 
                 // $startDate = 2024-11-18
                 // $duration = 2 jours
-                // $endDate = $startDate->modify(+2 jours);
+                // $endDate = $startDate->modify(+2 days);
                 // $endDate = 2024-11-20
                 // $startDate = 2024-11-20
 

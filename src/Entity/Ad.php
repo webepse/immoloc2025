@@ -6,6 +6,7 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 use App\Repository\AdRepository;
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -84,6 +85,33 @@ class Ad
             $slugify = new Slugify();
             $this->slug = $slugify->slugify($this->title);
         }
+    }
+
+    /**
+     * Permet d'obtenir un tableau des jours qui ne sont pas disponible pour l'annonce
+     *
+     * @return array|null Un tableau d'objet DateTime représentant les jours d'occupation
+     */
+    public function getNotAvailableDays(): ?array
+    {
+        $notAvailableDays = [];
+        // boucler les réservation liés à l'annonce (collection)
+        foreach($this->bookings as $booking)
+        {
+            // calculer les jours qui se trouvent entre startDate et endDate
+            // la fonction range() de php permet de créer un tableau qui contient chaque étape existante entre deux nombre
+            // $result = range(10,20,2)
+            // réponse: [10,12,14,16,18,20]
+            // 1 jour en timestamp 24h*60min*60s
+            $resultat = range($booking->getStartDate()->getTimestamp(),$booking->getEndDate()->getTimestamp(), 24*60*60);
+            // réponse [23132123,2131256161,121615126,1516156165]
+            $days = array_map(function($dayTimestamp){
+                return new \DateTime(date('Y-m-d',$dayTimestamp));
+            },$resultat);
+            // $days = [2024-11-20,2024-11-21,...]
+            $notAvailableDays = array_merge($notAvailableDays,$days);
+        }
+        return $notAvailableDays;
     }
 
     public function getTitle(): ?string
