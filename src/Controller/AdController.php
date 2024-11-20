@@ -155,18 +155,18 @@ class AdController extends AbstractController
     
     /**
      * Permet d'afficher une annonce via son slug en paramètre
-     * pour faire fonctionner cette methode, je dois aller dans config/packages/doctrine.yaml ligne 26 mettre true à auto_mapping
+     * je dois aller dans config/packages/doctrine.yaml et remodifier la ligne 26 mettre false à auto_mapping (valeur par défaut) mais le faire pour toutes les routes ayant un paramètre qui utilise le paramConverter
      * @param Ad $ad
      * @return Response
      */
     #[Route('/ads/{slug}', name:"ads_show")]
-    public function show(Ad $ad): Response
+    public function show( 
+        #[MapEntity(mapping: ['slug' => 'slug'])]
+        Ad $ad): Response
     {
         // dump($ad);
         return $this->render("ad/show.html.twig",[
             'ad' => $ad
         ]);
-    }
-
-  
+    }  
 }
