@@ -45,3 +45,7 @@
     max-width: 24px;
     max-height: 24px;
 }
+
+.datepicker-cell.disabled{
+    color: red !important;
+}
