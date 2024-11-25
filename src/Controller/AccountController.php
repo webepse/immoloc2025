@@ -286,4 +286,17 @@ class AccountController extends AbstractController
         }
         return $this->redirectToRoute('account_index');
     }
+
+
+    /**
+     * Permet d'afficher les réseravations de l'utilisateur
+     *
+     * @return Response
+     */
+    #[Route("/account/booking", name:"account_booking")]
+    #[IsGranted("ROLE_USER")]
+    public function bookings(): Response
+    {
+        return $this->render("account/bookings.html.twig");
+    }
 }
