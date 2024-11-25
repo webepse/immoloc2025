@@ -143,13 +143,25 @@ class AdController extends AbstractController
     #[Route("/ads/{slug}/delete", name: "ads_delete")]
     public function delete(Ad $ad, EntityManagerInterface $manager): Response
     {
-        $this->addFlash(
-            'success',
-            "L'annonce <strong>".$ad->getTitle()."</strong> a bien été supprimée"
-        );
-        $manager->remove($ad);
-        $manager->flush();
-        return $this->redirectToRoute('ads_index');
+        // on ne peut pas supprimer une annonce qui possède des réservations
+        if(count($ad->getBookings()) > 0)
+        {
+            $this->addFlash(
+                'warning',
+                "Vous ne pouvez pas supprimer l'annonce <strong>".$ad->getTitle()."</strong> car elle possède des réservations"
+            );
+            return $this->redirectToRoute('ads_show',['slug' => $ad->getSlug()]);
+        }else{
+            $this->addFlash(
+                'success',
+                "L'annonce <strong>".$ad->getTitle()."</strong> a bien été supprimée"
+            );
+            $manager->remove($ad);
+            $manager->flush();
+            return $this->redirectToRoute('ads_index');
+        }
+
+
     }
 
     
