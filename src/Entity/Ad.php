@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use DateTime;
+use App\Entity\User;
+use App\Entity\Comment;
 use Cocur\Slugify\Slugify;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 use App\Repository\AdRepository;
-use DateTime;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -65,10 +67,17 @@ class Ad
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'ad')]
     private Collection $bookings;
 
+    /**
+     * @var Collection<int, Comment>
+     */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'ad', orphanRemoval: true)]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->bookings = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,6 +121,42 @@ class Ad
             $notAvailableDays = array_merge($notAvailableDays,$days);
         }
         return $notAvailableDays;
+    }
+
+    /**
+     * Permet de récup la note d'une annonce
+     *
+     * @return integer
+     */
+    public function getAvgRatings(): int
+    {
+        // calculer la somme des notations
+        // la fonction array_reduce permet de réduire le tableau à une seule valeur (attention il faut un tableau et pas une array Collection, pour transformer toArray() - 2ème la fonction qui va être appliquée sur chaque valeur du tableau - 3ème param valeur par défaut)
+        // $sum = array_reduce($this->comments->toArray(), function($total,$comment){},0);
+        $sum = array_reduce($this->comments->toArray(), function($total,$comment){
+            return $total + $comment->getRating();
+        },0);
+
+        // faire la division pour avoir la moyenne (écriture ternaire)
+        if(count($this->comments) > 0) return $moyenne = round($sum / count($this->comments));
+
+        return 0;
+    }
+
+
+    /**
+     * Permet de récupérer le commentaire d'un auteur par rapport à une annonce
+     *
+     * @param User $author
+     * @return Comment|null
+     */
+    public function getCommentFromAuthor(User $author): ?Comment
+    {
+        foreach($this->comments as $comment)
+        {
+            if($comment->getAuthor() === $author) return $comment;
+        }
+        return null;
     }
 
     public function getTitle(): ?string
@@ -264,6 +309,36 @@ class Ad
             // set the owning side to null (unless already changed)
             if ($booking->getAd() === $this) {
                 $booking->setAd(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setAd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getAd() === $this) {
+                $comment->setAd(null);
             }
         }
 

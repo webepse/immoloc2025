@@ -50,6 +50,39 @@
                         </button>
                     </div>
                 </div>
+                {# gestion des commentaires #}
+                <hr>
+                {% if ad.comments | length > 0 %}
+                    <h2 class="mb-3">Commentaires de nos locataires</h2>
+                    <div class="alert alert-info">
+                        <div class="alert-heading text-center">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    Note globale
+                                </div>
+                                <div class="col">
+                                    {% include "partials/rating.html.twig" with {'rating': ad.avgRatings} %}
+                                    <br>
+                                    <small>(cette moyenne est calculée sur {{ad.comments | length}} avis)</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% for comment in ad.comments %}
+                        <div class="bg-light mb-3 p-3 text-white">
+                            <strong>{{comment.author.firstName}}</strong> a dit : 
+                            <blockquote>
+                                {{comment.content | nl2br }}
+                            </blockquote>
+                            <strong>Note donnée: </strong>
+                            {% include "partials/rating.html.twig" with {'rating': comment.rating} %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <h2>Cette annonce n'a pas encore reçu de commmentaire...</h2>
+                
+                {% endif %}
             </div>
             <div class="col">
                 {% set a = ad.author %}

@@ -49,3 +49,7 @@
 .datepicker-cell.disabled{
     color: red !important;
 }
+
+.rating i{
+    color: goldenrod;
+}
