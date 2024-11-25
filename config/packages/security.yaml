@@ -13,6 +13,19 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        admin:
+            pattern: ^/admin
+            provider: app_user_provider
+            form_login:
+                default_target_path: admin_ads_index
+                login_path: admin_account_login
+                check_path: admin_account_login
+            logout:
+                path: admin_account_logout
+                target: homepage
+            login_throttling:
+                max_attempts: 3
+                interval: '15 minutes'
         main:
             lazy: true
             provider: app_user_provider
@@ -36,6 +49,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/admin/login, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 
