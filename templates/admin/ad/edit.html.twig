@@ -76,7 +76,7 @@
                                         <td class="text-center">{{comment.rating}}</td>
                                         <td class="text-justify">{{comment.content}}</td>
                                         <td class="text-center">
-                                            <a href="#" class="btn btn-success">
+                                            <a href="{{path('admin_comments_edit', {'id': comment.id})}}" class="btn btn-success">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                         </td>

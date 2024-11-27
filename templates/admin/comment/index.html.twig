@@ -1,0 +1,45 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Administration des commentaires{% endblock %}
+
+{% block body %}
+    <div class="container-fluid full">
+        <h1 class="my-3">Gestion des commentaires</h1>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Date</th>
+                    <th>Auteur</th>
+                    <th>Commentaire</th>
+                    <th class="text-center">Note</th>
+                    <th>Annonce</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comment in comments %}
+                   <tr>
+                        <td>{{comment.id}}</td>
+                        <td>{{comment.createdAt | date('d/m/Y')}}</td>
+                        <td>
+                            {% if comment.author.picture %}
+                                <img src="/uploads/{{comment.author.picture}}" alt="avatar de {{comment.author.fullName}}" class="avatar avatar-micro">
+                            {% else %}
+                                <img src="http://placehold.it/64x64" alt="avatar par défaut de {{comment.author.fullName}}" class="avatar avatar-micro">
+                            {% endif %}
+                         {{comment.author.fullName}}
+                        </td>
+                        <td>{{comment.content}}</td>
+                        <td class="text-center"><span class="badge bg-primary rounded">{{comment.rating}}</span></td>
+                        <td><a href="{{path('admin_ads_edit',{'id':comment.ad.id})}}">{{comment.ad.title}}</a></td>
+                        <td class="text-center">
+                            <a href="{{ path('admin_comments_edit',{'id':comment.id})}}" class="btn btn-warning mx-1"><i class="fas fa-edit"></i></a>
+                            <a href="{{ path('admin_comments_delete',{'id':comment.id})}}" class="btn btn-danger mx-1"><i class="fas fa-trash"></i></a>
+                        </td>
+                   </tr> 
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
