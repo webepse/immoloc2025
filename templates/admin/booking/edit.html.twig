@@ -1,0 +1,27 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}Modification de la réservation n°{{booking.id}}{% endblock %}
+
+{% block body %}
+    <div class="container-fluid full">
+        <h1 class="my-5">Modification de la réservation n°{{booking.id}}</h1>
+        <a href="{{path('admin_ads_edit',{'id': booking.ad.id})}}" class="btn btn-secondary my-3">Voir l'annonce</a>
+        {{form_start(myForm)}}    
+            <div class="row">
+                <div class="col">
+                    {{form_row(myForm.startDate)}}
+                    {{form_row(myForm.endDate)}}
+                    {{form_row(myForm.comment)}}
+                </div>
+                <div class="col">
+                    {{form_row(myForm.booker)}}
+                    {{form_row(myForm.ad)}}
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check"></i> Enregistrer la modification
+                    </button>
+                </div>
+            </div>
+        {{form_end(myForm)}}    
+    </div>
+
+{% endblock %}

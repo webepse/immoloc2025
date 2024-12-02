@@ -43,7 +43,7 @@
                                         <td>{{booking.booker.fullName}}</td>
                                         <td>{{booking.createdAt | date('d/m/Y H:i')}}</td>
                                         <td class="text-center">
-                                            <a href="#" class="btn btn-success">
+                                            <a href="{{path('admin_bookings_edit',{'id': booking.id})}}" class="btn btn-success">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                         </td>

@@ -21,6 +21,10 @@ class BookingController extends AbstractController
     public function book(Ad $ad, EntityManagerInterface $manager, Request $request): Response
     {
         $booking = new Booking();
+        // pour choisir les gruops de validation on peut passer par le controller (attention si on donne juste un groupe de validation les assert par défaut ne sont plus prisent en compte sauf si on ajoute le groupe Default)
+        // $form = $this->createForm(BookingType::class,$booking,[
+        //     "validation_groups" => ["Default","front"]
+        // ]);
         $form = $this->createForm(BookingType::class,$booking);
         $form->handleRequest($request);
 
