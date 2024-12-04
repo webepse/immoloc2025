@@ -2,76 +2,208 @@
 
 namespace App\Service;
 
+use Twig\Environment;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class PaginationService{
 
-    private $entityClass; // l'entité sur laquelle on doit faire la pagination
-    private $limit = 10;
-    private $currentPage = 1;
-    // private $manager;
+    /**
+     * Le nom de l'entité sur laquelle on veut effectuer une pagination
+     *
+     * @var string
+     */
+    private string $entityClass; 
 
-    // public function __construct(EntityManagerInterface $manager)
-    // {
-    //     $this->manager = $manager;
-    // }
-    public function __construct(private EntityManagerInterface $manager)
-    {}
 
-    public function setEntityClass($entityClass)
+    /**
+     * Le nombre d'enregistremnet à récupérer
+     *
+     * @var integer
+     */
+    private int $limit = 10;
+
+    /**
+     * La page courante
+     *
+     * @var integer
+     */
+    private int $currentPage = 1;
+
+  
+    /**
+     * Le chemin vers le template qui conteint la pagination
+     *
+     * @var string
+     */
+    private string $route;
+   
+    public function __construct(private EntityManagerInterface $manager,private Environment $twig, private string $templatePath, RequestStack $request)
+    {
+        $this->route = $request->getCurrentRequest()->attributes->get('_route');
+    }
+
+
+    /**
+     * Permet de spécifier l'entité sur laquelle on souhaite paginer
+     *
+     * @param string $entityClass
+     * @return self
+     */
+    public function setEntityClass(string $entityClass): self
     {
         $this->entityClass = $entityClass;
 
         return $this;
     }
 
-    public function getEntityClass(){
+    /**
+     * PErmet de récupérer l'entité sur laquelle on est en train de paginer
+     *
+     * @return string
+     */
+    public function getEntityClass(): string
+    {
         return $this->entityClass;
     }
 
-    public function setLimit($limit){
+    /**
+     * Permet de spécifier le nombre d'enregistrement que l'on souhaite obtenir
+     *
+     * @param integer $limit
+     * @return self
+     */
+    public function setLimit(int $limit): self
+    {
         $this->limit = $limit;
 
         return $this;
     }
 
-    public function getLimit(){
+    /**
+     * Permet de récupéer le nombre d'enregistrement qui seront renvoyés
+     *
+     * @return integer
+     */
+    public function getLimit(): int
+    {
         return $this->limit;
     }
 
-    public function setPage($page){
+    /**
+     * Permet de spécifier la page que l'on souhaite afficher
+     *
+     * @param integer $page
+     * @return self
+     */
+    public function setPage(int $page): self
+    {
         $this->currentPage = $page;
         return $this;
     }
 
-    public function getPage(){
+    /**
+     * Permet de récup la page qui est actuellement affichée
+     *
+     * @return integer
+     */
+    public function getPage(): int
+    {
         return $this->currentPage;
     }
 
 
-    // fonction pour les données
-    public function getData()
+    /**
+     * Permet de récupérer les données paginées pour une entité spécifique
+     * @throws Exception si la propriété $entityClass n'est pas définie
+     * @return array
+     */
+    public function getData(): array
     {
+        if(empty($this->entityClass))
+        {
+            throw new \Exception("Vous n'avez pas spécifié l'entité sur laquelle nous devons paginer: utilisez la méthode setEntityClass() de votre objet PaginationService");
+        }
+
         // calculer l'offset
         $offset = $this->currentPage * $this->limit - $this->limit;
-        // demander au repositoy de trouver les éléments (et récup le repo)
-        $repo = $this->manager->getRepository($this->entityClass);
-
-        // recup les data
-        $data = $repo->findBy([],[],$this->limit,$offset);
-
-        return $data;
+    
+        return $this->manager
+                    ->getRepository($this->entityClass)
+                    ->findBy([],[],$this->limit,$offset);
     }
 
-    // fonction pour le nombre de page
-    public function getPages()
+    /**
+     * Permet de récupérer le nombre de page qui existent sur une entité donnée
+     * @throws Exception si la propriété $entityClass n'est pas configurée
+     * @return integer
+     */
+    public function getPages(): int
     {
-         // récup le repo
-         $repo = $this->manager->getRepository($this->entityClass);
-         $total = $repo->count();
-         $pages = ceil($total / $this->limit);
+        if(empty($this->entityClass))
+        {
+            throw new \Exception("Vous n'avez pas spécifié l'entité sur laquelle nous devons paginer: utilisez la méthode setEntityClass() de votre objet PaginationService");
+        }
+         // récup le total
+         $total = $this->manager
+                ->getRepository($this->entityClass)
+                ->count();
+         
+         return ceil($total / $this->limit);
+    }
 
-         return $pages;
+    public function display(): void
+    {
+        $this->twig->display($this->templatePath, [
+            'page' => $this->currentPage,
+            'pages' => $this->getPages(),
+            'route' => $this->route
+        ]);
+    }
+
+    /**
+     * Permet de choisir un template de pagination
+     *
+     * @param string $templatePath
+     * @return self
+     */
+    public function setTemplatePath(string $templatePath): self
+    {
+        $this->templatePath = $templatePath;
+        return $this;
+    }
+
+    /**
+     * Permet de récupérer le templatePath actuellement utilisé
+     *
+     * @return string
+     */
+    public function getTemplatePath(): string
+    {
+        return $this->templatePath;
+    }
+
+    /**
+     * Permet de changer la route par défaut pour les liens de la navigation
+     *
+     * @param string $route
+     * @return self
+     */
+    public function setRoute(string $route): self
+    {
+        $this->route = $route;
+
+        return $this;
+    }
+
+    /**
+     * Permet de récupérer le nom de la route qui sera utlisée sur les liens de la pagination
+     *
+     * @return string
+     */
+    public function getRoute(): string
+    {
+        return $this->route;
     }
 
 }
