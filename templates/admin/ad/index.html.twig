@@ -17,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for ad in ads %}
+                {% for ad in pagination.data %}
                     <tr>
                         <td>{{ad.id}}</td>
                         <td>{{ad.title}}</td>
@@ -37,6 +37,8 @@
             </tbody>
         </table>
         {# pagination #}
+        {% set pages = pagination.pages %}
+        {% set page = pagination.page %}
         <div class="d-flex justify-content-center">
             <ul class="pagination pagination-sm">
                 <li class="page-item {% if page == 1 %}disabled{% endif %}">

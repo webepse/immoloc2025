@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ad;
 use App\Form\AnnonceType;
 use App\Repository\AdRepository;
+use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,31 +26,14 @@ class AdminAdController extends AbstractController
     /* wwww.monsite.be/admin/ads/ */
     /* wwww.monsite.be/admin/ads/1 */
     #[Route('/admin/ads/{page<\d+>?1}', name: 'admin_ads_index')]
-    public function index(AdRepository $repo, int $page): Response
+    public function index(int $page, PaginationService $pagination): Response
     {
-        // (vérifier $page) 
-        // $ad = $repo->find(61);
-        // $ad = $repo->findBy(['title'=> 'annonce']);
-        // $ad = $repo->findOneBy(['title'=> 'annonce']);
-        // findBy($criteria, $orderBy, $limit, $offset)
-        // $ads = $repo->findBy([],[],5,0);
-        $limit = 10;
-        $start = $page * $limit - $limit;
-        // page 1 * 10 = 10 - 10 = 0
-        // page 2 * 10 = 20 - 10 = 10
-
-        // savoir combien de page j'ai besoin
-        // $total = count($repo->findAll());
-        // $total = count($repo->findBy([]));
-        $total = $repo->count();
-        dump($total);
-        // 41 / 10 => 4.1 => là il me faut 5 pages
-        $pages = ceil($total / $limit);
+        $pagination->setEntityClass(Ad::class)
+                ->setPage($page)
+                ->setLimit(9);
 
         return $this->render('admin/ad/index.html.twig', [
-            'ads' => $repo->findBy([],[],$limit,$start),
-            'pages' => $pages,
-            'page' => $page
+            'pagination' => $pagination
         ]);
     }
 
