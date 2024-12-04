@@ -37,11 +37,28 @@ class PaginationService{
      * @var string
      */
     private string $route;
-   
+
+     /**
+     * un tableau pour ordonner les résultats
+     *
+     * @var array|null
+     */
+    private ?array $order = null;
+
+
+   /**
+    * Constructeur de ma classe PaginationService
+    *
+    * @param EntityManagerInterface $manager
+    * @param Environment $twig
+    * @param string $templatePath
+    * @param RequestStack $request
+    */
     public function __construct(private EntityManagerInterface $manager,private Environment $twig, private string $templatePath, RequestStack $request)
     {
         $this->route = $request->getCurrentRequest()->attributes->get('_route');
     }
+
 
 
     /**
@@ -112,6 +129,28 @@ class PaginationService{
         return $this->currentPage;
     }
 
+    /**
+     * Permet de spécifier l'ordre que l'on souhaite afficher pour les résultats
+     *
+     * @param array $myOrder
+     * @return self
+     */
+    public function setOrder(array $myOrder):self 
+    {
+        $this->order = $myOrder;
+        return $this;
+    }
+
+
+    /**
+     * Permet de récupérer le tableau des order
+     *
+     * @return array
+     */
+    public function getOrder(): array
+    {
+        return $this->order;
+    }
 
     /**
      * Permet de récupérer les données paginées pour une entité spécifique
@@ -130,7 +169,7 @@ class PaginationService{
     
         return $this->manager
                     ->getRepository($this->entityClass)
-                    ->findBy([],[],$this->limit,$offset);
+                    ->findBy([],$this->order,$this->limit,$offset);
     }
 
     /**

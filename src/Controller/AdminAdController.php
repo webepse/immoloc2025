@@ -28,9 +28,11 @@ class AdminAdController extends AbstractController
     #[Route('/admin/ads/{page<\d+>?1}', name: 'admin_ads_index')]
     public function index(int $page, PaginationService $pagination): Response
     {
+        /* mode exemple pour la route */
         $pagination->setEntityClass(Ad::class)
                 ->setPage($page)
-                ->setLimit(9);
+                ->setLimit(10)
+                ->setRoute("admin_ads_index");
 
         return $this->render('admin/ad/index.html.twig', [
             'pagination' => $pagination
