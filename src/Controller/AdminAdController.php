@@ -16,14 +16,39 @@ class AdminAdController extends AbstractController
     /**
      * Permet d'afficher la page d'administration des annonces
      *
+     * #[Route('/admin/ads/{page}', name: 'admin_ads_index', requirements:["page"=>"\d+"])]
+     * #[Route('/admin/ads/{page?1}', name: 'admin_ads_index', requirements:["page"=>"\d+"])]
+     * 
      * @param AdRepository $repo
      * @return Response
      */
-    #[Route('/admin/ads', name: 'admin_ads_index')]
-    public function index(AdRepository $repo): Response
+    /* wwww.monsite.be/admin/ads/ */
+    /* wwww.monsite.be/admin/ads/1 */
+    #[Route('/admin/ads/{page<\d+>?1}', name: 'admin_ads_index')]
+    public function index(AdRepository $repo, int $page): Response
     {
+        // (vérifier $page) 
+        // $ad = $repo->find(61);
+        // $ad = $repo->findBy(['title'=> 'annonce']);
+        // $ad = $repo->findOneBy(['title'=> 'annonce']);
+        // findBy($criteria, $orderBy, $limit, $offset)
+        // $ads = $repo->findBy([],[],5,0);
+        $limit = 10;
+        $start = $page * $limit - $limit;
+        // page 1 * 10 = 10 - 10 = 0
+        // page 2 * 10 = 20 - 10 = 10
+
+        // savoir combien de page j'ai besoin
+        // $total = count($repo->findAll());
+        $total = count($repo->findBy([]));
+        // dump($total);
+        // 41 / 10 => 4.1 => là il me faut 5 pages
+        $pages = ceil($total / $limit);
+
         return $this->render('admin/ad/index.html.twig', [
-            'ads' => $repo->findAll()
+            'ads' => $repo->findBy([],[],$limit,$start),
+            'pages' => $pages,
+            'page' => $page
         ]);
     }
 
