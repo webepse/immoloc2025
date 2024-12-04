@@ -40,8 +40,9 @@ class AdminAdController extends AbstractController
 
         // savoir combien de page j'ai besoin
         // $total = count($repo->findAll());
-        $total = count($repo->findBy([]));
-        // dump($total);
+        // $total = count($repo->findBy([]));
+        $total = $repo->count();
+        dump($total);
         // 41 / 10 => 4.1 => là il me faut 5 pages
         $pages = ceil($total / $limit);
 
