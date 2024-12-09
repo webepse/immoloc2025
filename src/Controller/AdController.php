@@ -6,6 +6,7 @@ use App\Entity\Ad;
 use App\Entity\Image;
 use App\Form\AnnonceType;
 use App\Repository\AdRepository;
+use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,13 +26,15 @@ class AdController extends AbstractController
      * @param AdRepository $repo
      * @return Response
      */
-    #[Route('/ads', name: 'ads_index')]
-    public function index(AdRepository $repo): Response
+    #[Route('/ads/{page<\d+>?1}', name: 'ads_index')]
+    public function index(int $page, PaginationService $pagination): Response
     {
-        $ads = $repo->findAll();
+        $pagination->setEntityClass(Ad::class)
+                ->setPage($page)
+                ->setLimit(9);
         // dump($ads);
         return $this->render('ad/index.html.twig', [
-            'ads' => $ads
+            'pagination' => $pagination
         ]);
     }
 
@@ -42,7 +45,7 @@ class AdController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    #[Route("/ads/new", name:"ads_create")]
+    #[Route("/ad/new", name:"ads_create")]
     #[IsGranted("ROLE_USER")]
     public function create(Request $request, EntityManagerInterface $manager): Response
     {
@@ -85,7 +88,7 @@ class AdController extends AbstractController
     }
 
 
-    #[Route("ads/{slug}/edit", name:"ads_edit")]
+    #[Route("ad/{slug}/edit", name:"ads_edit")]
     #[IsGranted(
         attribute: new Expression('(user === subject and is_granted("ROLE_USER")) or is_granted("ROLE_ADMIN")'),
         subject: new Expression('args["ad"].getAuthor()'),
@@ -140,7 +143,7 @@ class AdController extends AbstractController
         message: "Cette annonce ne vous appartient pas, vous ne pouvez pas la supprimer"
 
     )]
-    #[Route("/ads/{slug}/delete", name: "ads_delete")]
+    #[Route("/ad/{slug}/delete", name: "ads_delete")]
     public function delete(Ad $ad, EntityManagerInterface $manager): Response
     {
         // on ne peut pas supprimer une annonce qui possède des réservations
@@ -171,7 +174,7 @@ class AdController extends AbstractController
      * @param Ad $ad
      * @return Response
      */
-    #[Route('/ads/{slug}', name:"ads_show")]
+    #[Route('/ad/{slug}', name:"ads_show")]
     public function show( 
         #[MapEntity(mapping: ['slug' => 'slug'])]
         Ad $ad): Response
