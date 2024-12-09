@@ -27,7 +27,9 @@ class AdminUserType extends ApplicationType
                 "choices" => [
                     "Administrateur" => "ROLE_ADMIN",
                     "modérateur" => "ROLE_MODERATOR"
-                ]
+                ],
+                "multiple" => true,
+                "required" => false
             ]))
         ;
     }

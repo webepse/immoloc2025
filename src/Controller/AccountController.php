@@ -125,23 +125,12 @@ class AccountController extends AbstractController
     public function profile(Request $request, EntityManagerInterface $manager): Response
     {
         $user = $this->getUser(); // récup le user connecté
-        // pour passer la validation soit ça soit valdiation groups 
-        $filename = $user->getPicture();
-        if(!empty($filename))
-        {
-            $user->setPicture(
-                new File($this->getParameter('uploads_directory').'/'.$user->getPicture())
-            );
-        }
-
         $form = $this->createForm(AccountType::class,$user);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
         {
             // gestion image 
-            $user->setSlug('')
-                ->setPicture($filename)
-            ;
+            $user->setSlug('');
 
             $manager->persist($user);
             $manager->flush();

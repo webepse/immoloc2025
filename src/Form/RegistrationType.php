@@ -36,6 +36,10 @@ class RegistrationType extends ApplicationType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'validation_groups' => [
+                'Default',
+                'front'
+            ]
         ]);
     }
 }
