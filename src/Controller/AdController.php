@@ -32,7 +32,7 @@ class AdController extends AbstractController
         $pagination->setEntityClass(Ad::class)
                 ->setPage($page)
                 ->setLimit(9);
-        // dump($ads);
+       
         return $this->render('ad/index.html.twig', [
             'pagination' => $pagination
         ]);
